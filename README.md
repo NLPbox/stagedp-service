@@ -1,3 +1,19 @@
+# Dockerized Setup
+
+docker build -t stage-dp .
+docker-compose up
+
+To test if parser works, just run ``docker run --net host stage-dp``.
+To run the parser on the file ``/tmp/input.txt`` on your
+local machine, run:
+
+```
+docker run --net host -v /tmp:/tmp -ti stage-dp /tmp/input.txt
+```
+
+
+
+
 # Two-stage Discourse Parser
 
 Here we implement the RST discourse parser described in [A Two-stage Parsing Method for Text-level Discourse Analysis](http://aclanthology.coli.uni-saarland.de/pdf/P/P17/P17-2029.pdf). 
