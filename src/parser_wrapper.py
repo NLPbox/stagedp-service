@@ -22,38 +22,37 @@ def parse_args():
     return parser.parse_args()
 
 
-def create_doc_from_edu_file(edu_file, annotate_func):
-    with open(edu_file, 'r') as fin:
+def create_doc_from_plaintext_file(text_file, annotate_func):
+    with open(text_file, 'r') as fin:
+        input_text = fin.read()
         doc_tokens = []
-        paragraphs = [p.strip() for p in fin.read().split('<P>') if p.strip()]
-        previous_edu_num = 0
-        for pidx, para in enumerate(paragraphs):
-            sentences = [s.strip() for s in para.split('<S>') if s.strip()]
-            for sidx, sent in enumerate(sentences):
-                edus = [e.strip() + ' ' for e in sent.split('\n') if e.strip()]
-                sent_text = ''.join(edus)
-                annot_re = annotate_func(sent_text)['sentences'][0]
-                sent_tokens = []
-                for t in annot_re['tokens']:
-                    token = Token()
-                    token.tidx, token.word, token.lemma, token.pos = t['index'], t['word'], t['lemma'], t['pos']
-                    token.pidx, token.sidx = pidx + 1, sidx
-                    edu_text_length = 0
-                    for eidx, edu_text in enumerate(edus):
-                        edu_text_length += len(edu_text)
-                        if edu_text_length > t['characterOffsetEnd']:
-                            token.eduidx = previous_edu_num + eidx + 1
-                            break
-                    sent_tokens.append(token)
-                for dep in annot_re['basicDependencies']:
-                    dependent_token = sent_tokens[dep['dependent']-1]
-                    dependent_token.hidx = dep['governor']
-                    dependent_token.dep_label = dep['dep']
-                doc_tokens += sent_tokens
-                previous_edu_num += len(edus)
+        
+        sentences = annotate_func(input_text)['sentences']
+        for sidx, sent in enumerate(sentences):
+            sent_tokens = []
+            for t in sent['tokens']:
+                token = Token()
+                token.tidx, token.word, token.lemma, token.pos = t['index'], t['word'], t['lemma'], t['pos']
+
+                # Our input is not annotated with paragraph/sentence/EDU boundaries,
+                # so the paragraph index (pidx) is always 1 and the
+                # EDU index (edudix) always equals the sentence number (sidx + 1).
+                #
+                # Don't ask me why sidx starts counting at 0, but pidx and eduidx start at 1.
+                token.pidx = 1
+                token.sidx = sidx
+                token.eduidx = sidx + 1
+                sent_tokens.append(token)
+            for dep in sent['basicDependencies']:
+                dependent_token = sent_tokens[dep['dependent']-1]
+                dependent_token.hidx = dep['governor']
+                dependent_token.dep_label = dep['dep']
+            doc_tokens += sent_tokens
+
     doc = Doc()
     doc.init_from_tokens(doc_tokens)
     return doc
+
 
 
 def main():
@@ -64,27 +63,23 @@ def main():
         print('Load Brown clusters for creating features ...')
         brown_clusters = pickle.load(fin)
     core_nlp = StanfordCoreNLP('http://localhost:9000')
-    annotate = lambda x: core_nlp.annotate(x, properties={
+
+    annotate_plaintext = lambda x: core_nlp.annotate(x, properties={
         'annotators': 'tokenize,ssplit,pos,lemma,parse,depparse',
-        'outputFormat': 'json',
-        'ssplit.isOneSentence': True
+        'outputFormat': 'json'
     })
 
-    print('Parsing {}...'.format(args.input_file))
-    doc = create_doc_from_edu_file(args.input_file, annotate_func=annotate)
+    doc = create_doc_from_plaintext_file(args.input_file, annotate_func=annotate_plaintext)
+    
     pred_rst = parser.sr_parse(doc, brown_clusters)
     tree_str = pred_rst.get_parse()
     pprint_tree_str = Tree.fromstring(tree_str).pformat(margin=150) + '\n'
     
-    # ~ import pudb; pudb.set_trace()
     if isinstance(args.output_file, str):
         with open(args.output_file, 'w') as fout:
             fout.write(pprint_tree_str)
     else:
         sys.stdout.write(pprint_tree_str)
-
-# args.output_file deafults to:                                                                                            
-#   <_io.TextIOWrapper name='<stdout>' mode='w' encoding='UTF-8'>
 
 
 if __name__ == '__main__':
