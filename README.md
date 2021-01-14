@@ -7,8 +7,10 @@ confusion regarding the installation process.
 
 ## Installation
 
+```
 docker build -t stage-dp .
 docker-compose up
+```
 
 ## Usage
 
