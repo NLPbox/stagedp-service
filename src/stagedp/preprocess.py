@@ -5,7 +5,7 @@
 
 import argparse
 import os
-from utils.xmlreader import reader, writer, combine
+from stagedp.utils.xmlreader import reader, writer, combine
 
 
 def join_edus(fedu):

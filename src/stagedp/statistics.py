@@ -5,8 +5,8 @@
 from collections import Counter
 
 from data_helper import DataHelper
-from models.tree import RstTree
-from utils.other import class2rel
+from stagedp.models.tree import RstTree
+from stagedp.utils.other import class2rel
 
 
 def cal_class_distribution(data_dir, level):

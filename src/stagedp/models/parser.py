@@ -4,10 +4,10 @@
 # created_at: 10/27/2016 下午7:32
 import os
 
-from features.extraction import ActionFeatureGenerator, RelationFeatureGenerator
-from models.classifiers import ActionClassifier, RelationClassifier
-from models.state import ParsingState
-from models.tree import RstTree
+from stagedp.features.extraction import ActionFeatureGenerator, RelationFeatureGenerator
+from stagedp.models.classifiers import ActionClassifier, RelationClassifier
+from stagedp.models.state import ParsingState
+from stagedp.models.tree import RstTree
 
 
 class RstParser(object):

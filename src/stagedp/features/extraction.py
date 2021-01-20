@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # author: Yizhong
 # created_at: 10/27/2016 上午10:32
-from utils.other import action2str
+from stagedp.utils.other import action2str
 
 
 class ActionFeatureGenerator(object):

@@ -8,9 +8,9 @@ import pickle
 from collections import defaultdict
 
 import numpy as np
-from features.selection import FeatureSelector
-from models.tree import RstTree
-from utils.other import vectorize
+from stagedp.features.selection import FeatureSelector
+from stagedp.models.tree import RstTree
+from stagedp.utils.other import vectorize
 
 
 class DataHelper(object):

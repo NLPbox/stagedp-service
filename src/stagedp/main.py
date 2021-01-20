@@ -9,9 +9,9 @@ import pickle
 
 import scipy
 from data_helper import DataHelper
-from eval.evaluation import Evaluator
-from models.classifiers import ActionClassifier, RelationClassifier
-from models.parser import RstParser
+from stagedp.eval.evaluation import Evaluator
+from stagedp.models.classifiers import ActionClassifier, RelationClassifier
+from stagedp.models.parser import RstParser
 
 
 def train_model(data_helper):

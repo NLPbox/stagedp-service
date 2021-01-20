@@ -8,12 +8,12 @@ import argparse
 import sys
 from pathlib import Path
 
+from nltk import Tree
 from pycorenlp import StanfordCoreNLP
 
-from models.parser import RstParser
-from utils.token import Token
-from utils.document import Doc
-from nltk import Tree
+from stagedp.models.parser import RstParser
+from stagedp.utils.token import Token
+from stagedp.utils.document import Doc
 
 
 def parse_args():
