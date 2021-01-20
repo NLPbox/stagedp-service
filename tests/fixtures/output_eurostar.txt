@@ -1,0 +1,5 @@
+(NS-Elaboration
+  (EDU
+    _!<P>_<S>_Eurostar_has_said_it_is_facing_an_existential_threat_,_as_business_leaders_pleaded_with_the_government_to_step_in_and_save_the_``_vital_link_''_with_Europe_.!_)
+  (EDU
+    _!<P>_<S>_A_95_%_drop_in_passenger_numbers_has_brought_the_cross-Channel_train_service_to_its_knees_,_and_the_company_reiterated_on_Sunday_that_while_government_loans_had_been_extended_to_aviation_,_international_high-speed_rail_had_also_been_severely_affected_by_the_pandemic_.!_))
