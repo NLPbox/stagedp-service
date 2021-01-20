@@ -6,6 +6,7 @@ import gzip
 import pickle
 import argparse
 import sys
+from pathlib import Path
 
 from pycorenlp import StanfordCoreNLP
 
@@ -64,8 +65,13 @@ def parse_text(text, rst_parser, annotate_func, brown_clusters):
 
 def load_parser():
     rst_parser = RstParser()
-    rst_parser.load('../data/model')
-    with gzip.open('../data/resources/bc3200.pickle.gz') as fin:
+
+    repo_root_dir = Path(__file__).parent.parent.parent
+    model_dir = repo_root_dir.joinpath('data/model').absolute().as_posix()
+    rst_parser.load(model_dir)
+    
+    brown_cluster_path = repo_root_dir.joinpath('data/resources/bc3200.pickle.gz').absolute().as_posix()
+    with gzip.open(brown_cluster_path) as fin:
         print('Load Brown clusters for creating features ...')
         brown_clusters = pickle.load(fin)
     core_nlp = StanfordCoreNLP('http://localhost:9000')
