@@ -66,7 +66,7 @@ def parse_text(text, rst_parser, annotate_func, brown_clusters):
 def load_parser():
     rst_parser = RstParser()
 
-    repo_root_dir = Path(__file__).parent.parent.parent
+    repo_root_dir = Path(__file__).absolute().parent.parent.parent
     model_dir = repo_root_dir.joinpath('data/model').absolute().as_posix()
     rst_parser.load(model_dir)
     
