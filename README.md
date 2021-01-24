@@ -15,9 +15,12 @@ docker-compose up
 ## Usage
 
 To test if parser works, just run ``docker run --net host stage-dp``.
-To run the parser on the file ``/tmp/input.txt`` on your
-local machine, run:
+
+To run the parser on the file ``input_short.txt`` from this repo,
+copy it to your `/tmp` directory, mount that directory into the
+Docker container and run it:
 
 ```
-docker run --net host -v /tmp:/tmp -ti stage-dp /tmp/input.txt
+cp input_short.txt /tmp/
+docker run --net host -v /tmp:/tmp -ti stage-dp /tmp/input_short.txt
 ```
