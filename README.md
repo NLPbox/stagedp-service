@@ -24,3 +24,9 @@ Docker container and run it:
 cp input_short.txt /tmp/
 docker run --net host -v /tmp:/tmp -ti stage-dp /tmp/input_short.txt
 ```
+
+## Running tests
+
+```
+docker-compose -f docker-compose-test.yml up --exit-code-from stagedp
+```
