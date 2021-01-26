@@ -15,15 +15,12 @@ RUN pip install pytest # TODO: remove
 COPY data /opt/stage-dp/data
 COPY src /opt/stage-dp/src
 COPY tests /opt/stage-dp/tests
-COPY setup.py README.md /opt/stage-dp/
+COPY setup.py README.md wait_for_it.py /opt/stage-dp/
 
 RUN cp -r data /usr/local/lib/python3.5/site-packages/
 
 RUN python setup.py install
  
 
-WORKDIR /opt/stage-dp/src/stagedp
-
-ENTRYPOINT ["./parser_wrapper.py"]
-CMD ["../../tests/fixtures/input_long.txt"]
+ENTRYPOINT ["./src/stagedp/parser_wrapper.py"]
 

@@ -13,6 +13,6 @@ services:
     ports:
       - "9001:8000"
     network_mode: "host"
-    command: >
-      sh -c "sleep 10 && 
-             pytest -v"
+    entrypoint: >
+      sh -c "python wait_for_it.py -t 20 http://localhost:9000 &&
+             pytest -v "
