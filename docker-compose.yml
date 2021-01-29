@@ -6,9 +6,15 @@ services:
       - JAVA_XMX=4g
     ports:
       - "9000:9000"
+  neuralseg:
+    image: "neuralseg"
+    ports:
+      - "9001:8000"
+    entrypoint: > 
+      hug -f neuralseg/splitter_api.py
   stagedp:
     build: .
     environment:
       - CORENLP_ENDPOINT=http://corenlp:9000
     ports:
-      - "9001:8000"
+      - "9002:8000"

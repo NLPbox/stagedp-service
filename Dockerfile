@@ -20,7 +20,6 @@ COPY setup.py README.md wait_for_it.py /opt/stage-dp/
 RUN cp -r data /usr/local/lib/python3.5/site-packages/
 
 RUN python setup.py install
- 
 
 ENTRYPOINT ["./src/stagedp/parser_wrapper.py"]
 

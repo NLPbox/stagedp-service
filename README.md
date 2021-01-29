@@ -5,24 +5,21 @@ I keep the orginal README in a [separate file](README_ORIGINAL.md) to avoid
 confusion regarding the installation process.
 
 
-## Installation
-
-```
-docker build -t stage-dp .
-docker-compose up
-```
-
 ## Usage
 
-To test if parser works, just run ``docker run --net host stage-dp``.
-
-To run the parser on the file ``input_short.txt`` from this repo,
+To run the parser on the file ``input_short.neuraleduseg`` from this repo,
 copy it to your `/tmp` directory, mount that directory into the
 Docker container and run it:
 
 ```
-cp input_short.txt /tmp/
-docker run --net host -v /tmp:/tmp -ti stage-dp /tmp/input_short.txt
+$ docker-compose up -d
+$ cp tests/fixtures/input_short.txt /tmp/
+$ docker run --net host -v /tmp:/tmp -ti stage-dp /tmp/input_short.neuraleduseg
+Load action classifier from file: /opt/stage-dp/data/model/model.action.gz with 110976 features and 4 actions.
+Load relation classifier from file: /opt/stage-dp/data/model/model.relation.gz with 35376 features at level 0, 17911 features at level 1, 16665 features at level 2, and 18 relations.
+Load Brown clusters for creating features ...
+(EDU _!Although_they_did_n't_like_it_,_they_accepted_the_offer_.!_)
+$ docker-compose down
 ```
 
 ## Running tests
