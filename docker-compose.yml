@@ -16,5 +16,8 @@ services:
     build: .
     environment:
       - CORENLP_ENDPOINT=http://corenlp:9000
+      - NEURALSEG_ENDPOINT=http://neuralseg:8000 # we're using the container port, b/c this is not via --net host
     ports:
       - "9002:8000"
+    entrypoint: >
+      hug -f src/stagedp/parser_api.py

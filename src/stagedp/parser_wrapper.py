@@ -74,7 +74,10 @@ def load_parser():
     with gzip.open(brown_cluster_path) as fin:
         print('Load Brown clusters for creating features ...')
         brown_clusters = pickle.load(fin)
-    core_nlp = StanfordCoreNLP('http://localhost:9000')
+    
+    # CORENLP_ENDPOINT env is defined in docker-compose, but we provide a fallback as well.
+    corenlp_endpoint = os.environ.get('CORENLP_ENDPOINT', 'http://localhost:9000')
+    core_nlp = StanfordCoreNLP(corenlp_endpoint)
 
     annotation_func = lambda x: core_nlp.annotate(x, properties={
         'annotators': 'tokenize,ssplit,pos,lemma,parse,depparse',

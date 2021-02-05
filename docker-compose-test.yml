@@ -6,13 +6,20 @@ services:
       - JAVA_XMX=4g
     ports:
       - "9000:9000"
+  neuralseg:
+    image: "neuralseg"
+    ports:
+      - "9001:8000"
+    entrypoint: > 
+      hug -f neuralseg/splitter_api.py
   stagedp:
     build: .
     environment:
       - CORENLP_ENDPOINT=http://corenlp:9000
+      - NEURALSEG_ENDPOINT=http://neuralseg:8000 # we're using the internal container port, b/c this is not via --net host
     ports:
-      - "9001:8000"
-    network_mode: "host"
+      - "9002:8000"
     entrypoint: >
-      sh -c "python wait_for_it.py -t 20 http://localhost:9000 &&
-             pytest -v "
+      sh -c "python wait_for_it.py -t 20 $${CORENLP_ENDPOINT} &&
+             python wait_for_it.py -t 30 $${NEURALSEG_ENDPOINT}/status &&
+             pytest -v"
