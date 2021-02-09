@@ -7,7 +7,7 @@ services:
     ports:
       - "9000:9000"
   neuralseg:
-    image: "neuralseg"
+    image: "nlpbox/neuraleduseg-service:latest"
     ports:
       - "9001:8000"
     entrypoint: > 
