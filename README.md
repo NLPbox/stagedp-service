@@ -7,6 +7,8 @@ confusion regarding the installation process.
 
 ## Usage
 
+### Commandline usage
+
 To run the parser on the file ``input_short.neuraleduseg`` from this repo,
 copy it to your `/tmp` directory, mount that directory into the
 Docker container and run it:
@@ -20,6 +22,13 @@ Load relation classifier from file: /opt/stage-dp/data/model/model.relation.gz w
 Load Brown clusters for creating features ...
 (EDU _!Although_they_did_n't_like_it_,_they_accepted_the_offer_.!_)
 $ docker-compose down
+```
+
+### REST API usage
+
+```
+$ curl -X POST -F "input=@tests/fixtures/input_short.txt" http://localhost:9002/parse
+(EDU _!<P>_<S>_Although_they_did_n't_like_it_,_they_accepted_the_offer_.!_)
 ```
 
 ## Running tests
