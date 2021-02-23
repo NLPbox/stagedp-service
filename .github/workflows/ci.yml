@@ -3,18 +3,32 @@ name: Docker Image CI
 on:
   push:
     branches: [ master ]
+    tags:
+      - '*'
   pull_request:
     branches: [ master ]
+
+env:
+  IMAGE_NAME: stagedp-service
 
 jobs:
 
   build:
-
+    name: Build, test and publish Docker image to Docker Hub
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
-    - name: build containers using docker-compose
-      run: docker-compose build
-    - name: run pytest in docker-compose
+
+    - name: Run pytest in docker-compose
       run: docker-compose -f docker-compose-test.yml up --exit-code-from stagedp
+
+    - name: Build Docker image
+      run: docker build -t ${{secrets.DOCKERHUB_USER}}/$IMAGE_NAME:latest -t ${{secrets.DOCKERHUB_USER}}/$IMAGE_NAME:${{github.run_number}} .
+
+    - name: Login to Docker Hub
+      run: echo '''${{secrets.DOCKERHUB_PASSWORD}}''' | docker login -u ${{secrets.DOCKERHUB_USER}} --password-stdin
+    - name: Publish Docker image
+      # The version of docker used in Github Actions does not understand 'docker push --all-tags'
+      # cf. https://github.com/NLPbox/neuraleduseg-service/runs/1869547000?check_suite_focus=true
+      run: docker push ${{secrets.DOCKERHUB_USER}}/$IMAGE_NAME:latest && docker push ${{secrets.DOCKERHUB_USER}}/$IMAGE_NAME:${{github.run_number}}
