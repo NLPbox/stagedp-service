@@ -1,8 +1,7 @@
 import os
-import logging
-import sys
+import traceback
 
-from falcon import HTTP_200
+import falcon
 import hug
 import requests
 
@@ -38,19 +37,24 @@ def call_parser(body):
         input_file_content = body['input']
         input_text = input_file_content.decode('utf-8')
 
-        # segment input_text with NeuralEDUSeg REST API
-        res = requests.post('{}/parse'.format(NEURALSEG_ENDPOINT),
-                            files={'input': input_text})
-        segmented_text = res.content.decode('utf-8')
+        try:
+            # segment input_text with NeuralEDUSeg REST API
+            res = requests.post('{}/parse'.format(NEURALSEG_ENDPOINT),
+                                files={'input': input_text})
+            segmented_text = res.content.decode('utf-8')
 
-        output_text = parse_text(segmented_text, rst_parser=RST_PARSER, annotate_func=ANNOTATION_FUNC, brown_clusters=BROWN_CLUSTERS)
-        with open(OUTPUT_FILEPATH, 'w') as output_file:
-            output_file.write(output_text)
+            output_text = parse_text(segmented_text, rst_parser=RST_PARSER, annotate_func=ANNOTATION_FUNC, brown_clusters=BROWN_CLUSTERS)
 
-        return OUTPUT_FILEPATH
+            with open(OUTPUT_FILEPATH, 'w') as output_file:
+                output_file.write(output_text)
+            return OUTPUT_FILEPATH
+        except Exception:
+            ex_str = traceback.format_exc()
+            raise falcon.HTTPInternalServerError("Can't get result from CoreNLP/NeuralEDUSeg", ex_str)
+
     else:
         return {'body': body}
 
 @hug.get('/status')
 def get_status():
-    return HTTP_200
+    return falcon.HTTP_200
